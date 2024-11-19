@@ -5,10 +5,10 @@ defmodule ExTika.Mixfile do
     [
       app: :extika,
       description: "Wrapper around Apache Tika",
-      version: "0.0.4",
+      version: "0.0.5",
       package: package(),
       elixir: "~> 1.1",
-      compilers: [:tika | Mix.compilers],
+      compilers: [:tika | Mix.compilers()],
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -33,7 +33,7 @@ defmodule ExTika.Mixfile do
       maintainers: ["Andrew Dunham", "Neya"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/andrew-d/extika",
+        "GitHub" => "https://github.com/dsignr/extika",
         "Docs" => "https://andrew-d.github.io/extika/"
       }
     ]
@@ -71,7 +71,6 @@ defmodule Mix.Tasks.Compile.Tika do
   defp fetch_one(fname, url, sum) do
     dest = Path.join("priv", fname)
 
-    # If the file doesn't exist, download it.
     unless File.exists?(dest) do
       Mix.shell().info("Fetching: #{fname}")
       fetch_url(url, dest)
@@ -79,9 +78,7 @@ defmodule Mix.Tasks.Compile.Tika do
 
     Mix.shell().info("Verifying checksum of: #{fname}")
     case verify_checksum(dest, sum) do
-      :ok ->
-        :ok
-
+      :ok -> :ok
       {:error, msg} ->
         Mix.shell().error(msg)
         File.rm(dest)
@@ -95,8 +92,9 @@ defmodule Mix.Tasks.Compile.Tika do
 
     headers = [{"User-Agent", "ExTika/#{System.version()}"}]
 
-    case HTTPoison.get(url, headers, stream_to: File.open!(dest, [:write])) do
-      {:ok, %HTTPoison.AsyncResponse{}} ->
+    case HTTPoison.get(url, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        File.write!(dest, body)
         :ok
 
       {:ok, %HTTPoison.Response{status_code: status}} when status >= 400 ->
