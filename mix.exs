@@ -1,5 +1,6 @@
 defmodule ExTika.Mixfile do
   use Mix.Project
+  alias ExTika.Compiler
 
   def project do
     [
@@ -30,7 +31,7 @@ defmodule Mix.Tasks.Compile.Tika do
     version = File.read!(".tika-version") |> String.trim()
     dest = Path.join("priv", "tika-#{version}.jar")
 
-    Extika.Compiler.fetch_tika(version, dest)
+    Compiler.fetch_tika(version, dest)
 
     Mix.shell().info("Done!")
   end

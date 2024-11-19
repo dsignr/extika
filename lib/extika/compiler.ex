@@ -1,4 +1,4 @@
-defmodule Extika.Compiler do
+defmodule ExTika.Compiler do
   @moduledoc """
   Module for downloading and verifying Apache Tika JAR files.
   """
