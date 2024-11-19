@@ -30,7 +30,7 @@ defmodule ExTika.Mixfile do
     [
       name: :extika,
       files: ["lib", "mix.exs", "README*", "LICENSE*", ".tika-version"],
-      maintainers: ["Andrew Dunham"],
+      maintainers: ["Andrew Dunham", "Neya"],
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/andrew-d/extika",
