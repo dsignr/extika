@@ -5,7 +5,7 @@ defmodule ExTika.Mixfile do
     [
       app: :extika,
       description: "Wrapper around Apache Tika",
-      version: "0.0.4",
+      version: "0.1.0",
       package: package(),
       elixir: "~> 1.1",
       compilers: [:tika | Mix.compilers],
