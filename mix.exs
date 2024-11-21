@@ -56,11 +56,11 @@ defmodule Mix.Tasks.Compile.Tika do
     version = File.read!(".tika-version")
     |> String.trim
 
-    fetch_one(
-      "tika-#{version}.jar",
-      "https://archive.apache.org/dist/tika/tika-app-#{version}.jar",
-      "4f377b42e122f92c3f1f3b4702029cf0642c7d6f3ce872a0dfb1472eac65be44"
-    )
+    # fetch_one(
+    #   "tika-#{version}.jar",
+    #   "https://archive.apache.org/dist/tika/tika-app-#{version}.jar",
+    #   "4f377b42e122f92c3f1f3b4702029cf0642c7d6f3ce872a0dfb1472eac65be44"
+    # )
 
     Mix.shell.info("Done!")
   end
@@ -93,30 +93,30 @@ defmodule Mix.Tasks.Compile.Tika do
     # Ensure the directory exists
     File.mkdir_p!(Path.dirname(dest))
 
-    {:ok, _} = Application.ensure_all_started(:ssl)
-    {:ok, _} = Application.ensure_all_started(:inets)
+    # {:ok, _} = Application.ensure_all_started(:ssl)
+    # {:ok, _} = Application.ensure_all_started(:inets)
 
     # Starting an HTTP client profile allows us to scope
     # the effects of using an HTTP proxy to this function
-    {:ok, _pid} = :inets.start(:httpc, [{:profile, :extika}])
+    # {:ok, _pid} = :inets.start(:httpc, [{:profile, :extika}])
 
     # Set proxy config.
-    proxy_config()
+    # proxy_config()
 
-    headers = [{'user-agent', 'ExTika/#{System.version}'}]
-    request = {:binary.bin_to_list(url), headers}
+    # headers = [{'user-agent', 'ExTika/#{System.version}'}]
+    # request = {:binary.bin_to_list(url), headers}
 
-    http_options = [relaxed: true] ++ proxy_auth(url)
-    options = [stream: :binary.bin_to_list(dest)]
+    # http_options = [relaxed: true] ++ proxy_auth(url)
+    # options = [stream: :binary.bin_to_list(dest)]
 
-    case :httpc.request(:get, request, http_options, options, :extika) do
-      {:ok, :saved_to_file} ->
-        :ok
-      {:ok, {{_, status, _}, _, _}} ->
-        {:remote, "httpc request failed with: {:bad_status_code, #{status}}"}
-      {:error, reason} ->
-        {:remote, "httpc request failed with: #{inspect reason}"}
-    end
+    # case :httpc.request(:get, request, http_options, options, :extika) do
+    #   {:ok, :saved_to_file} ->
+    #     :ok
+    #   {:ok, {{_, status, _}, _, _}} ->
+    #     {:remote, "httpc request failed with: {:bad_status_code, #{status}}"}
+    #   {:error, reason} ->
+    #     {:remote, "httpc request failed with: #{inspect reason}"}
+    # end
 
   after
     :inets.stop(:httpc, :extika)
